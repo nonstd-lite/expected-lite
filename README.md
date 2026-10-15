@@ -291,17 +291,21 @@ You can use the R3 revision of P2505, which lacks `error_or`, and uses `remove_c
 <a id="comparison"></a>
 ## Comparison with like types
 
+The standard-library columns describe C++23; availability in earlier language versions is listed separately.
+The `nonstd::expected` column describes the implementation supplied by this library when `nsel_CONFIG_SELECT_EXPECTED=nsel_EXPECTED_NONSTD`; selecting the standard implementation instead gives the `std::expected` behavior.
+
 |Feature               |<br>std::pair|std:: optional |std:: expected |nonstd:: expected |Boost. Expected |Nonco expected |Andrei Expected |Hagan required |
 |----------------------|-------------|---------------|---------------|------------------|----------------|---------------|----------------|---------------|
-|More information      | see [14]    | see [5]       | see [1]       | this work        | see [4]        | see [7]       | see [8]        | see [13]      |
+|More information      | see [14]    | see [5]       | [C++23 expected](https://timsong-cpp.github.io/cppwp/n4950/expected) | this work        | see [4]        | see [7]       | see [8]        | see [13]      |
 |                      |             |               |               |                  |                |               |                |               |
 | C++03                | yes         | no            | no            | no/not yet       | no (union)     | no            | no             | yes           |
 | C++11                | yes         | no            | no            | yes              | yes            | yes           | yes            | yes           |
 | C++14                | yes         | no            | no            | yes              | yes            | yes           | yes            | yes           |
 | C++17                | yes         | yes           | no            | yes              | yes            | yes           | yes            | yes           |
+| C++23                | yes         | yes           | yes           | yes              | not assessed   | not assessed  | not assessed   | not assessed  |
 |                      |             |               |               |                  |                |               |                |               |
-|DefaultConstructible  | T param     | yes           | yes           | yes              | yes            | no            | no             | no            |
-|In-place construction | no          | yes           | yes           | yes              | yes            | yes           | no             | no            |
+|DefaultConstructible  | T param     | yes           | if T is void or default-constructible | yes              | yes            | no            | no             | no            |
+|In-place construction | yes, piecewise | yes           | yes           | yes              | yes            | yes           | no             | no            |
 |Literal type          | yes         | yes           | yes           | yes              | yes            | no            | no             | no            |
 |                      |             |               |               |                  |                |               |                |               |
 |Disengaged information| possible    | no            | yes           | yes              | yes            | yes           | yes            | no            |
@@ -309,11 +313,11 @@ You can use the R3 revision of P2505, which lacks `error_or`, and uses `remove_c
 |Engaged nonuse throws | no          | no            | no            | no               | error_traits   | no            | no             | yes           |
 |Disengaged use throws | no          | yes, value()  | yes, value()  | yes, value()     | yes,<br>value()| yes,<br>get() | yes,<br>get()  | n/a           |
 |                      |             |               |               |                  |                |               |                |               |
-|Proxy (rel.ops)       | no          | yes           | yes           | yes              | yes            | no            | no             | no            |
-|References            | no          | yes           | no/not yet    | no/not yet       | no/not yet     | yes           | no             | no            |
-|Chained visitor(s)    | no          | no            | yes           | yes              | yes            | no            | no             | no            |
+|Comparison operators  | yes         | yes           | equality only | equality; ordering for nsel_P0323R <= 2 | yes            | no            | no             | no            |
+|References            | yes         | no            | no            | no               | no/not yet     | yes           | no             | no            |
+|Chained visitor(s)    | no          | yes (C++23)   | yes (C++23)   | yes              | yes            | no            | no             | no            |
 
-Note 1: std:&#58;*experimental*:&#58;expected
+Note 1: `std::expected` is provided by `<expected>` in C++23, in namespace `std` rather than `std::experimental`. Its monadic operations are `and_then`, `or_else`, `transform`, and `transform_error`. The older third-party implementations have not been reassessed for C++23 compatibility here.
 
 Note 2: sources for [Nonco expected](https://github.com/martinmoene/spike-expected/tree/master/nonco), [Andrei Expected](https://github.com/martinmoene/spike-expected/tree/master/alexandrescu) and [Hagan required](https://github.com/martinmoene/spike-expected/tree/master/hagan) can befound in the [spike-expected](https://github.com/martinmoene/spike-expected) repository.
 
