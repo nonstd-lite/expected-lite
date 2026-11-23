@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [9, 10, 11]
+        version: [11, 16]
 
     runs-on: ubuntu-latest
 
